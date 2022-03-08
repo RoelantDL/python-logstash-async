@@ -111,6 +111,11 @@ class LogstashFormatter(logging.Formatter):
         message.update(record_fields)
         # prepare dynamic extra fields
         extra_fields = self._get_extra_fields(record)
+
+        if self._extra_prefix is None and message.get('extra') is not None:
+            message.update(message.get('extra'))
+            message.pop('extra')
+        
         # remove all fields to be excluded
         self._remove_excluded_fields(message, extra_fields)
         # wrap extra fields in configurable namespace
